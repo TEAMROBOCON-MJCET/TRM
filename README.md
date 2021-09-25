@@ -5,7 +5,7 @@ Document with all the TRM Codes used over the years
 ## Repo Structure
 
 The Following repo structure is used.<br>
-![Repo Structure](/"Extra Resources"/"Repo Structure.jpeg")
+![Repo Structure](Extra%20Resources/Repo%20Structure.jpeg)
 
 ## Contributing to the Repo
 
