@@ -19,7 +19,6 @@ GPIO.setup(OUTPUT_PINS,GPIO.OUT)
 GPIO.setup([12,16,18],GPIO.IN)
 
 
-
 def find_area_of_largest_contour(binary_image):
     """
     Takes an input binarized Image to and finds the area of the largest contour
@@ -56,17 +55,17 @@ def find_area_of_largest_contour(binary_image):
 
 
 # Initializing relevant variables
-count_area1,count_area2,count_area3 = 0,0,0
+count_area1, count_area2, count_area3 = 0, 0, 0
 
 # Initializing Video Capture
 global cap
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(-1)
 
 while(True):
 
     # The recognition process starts when a command is received from the Central Arduino
     if (GPIO.input(12) == GPIO.HIGH):
-        # print ('In Tha Loop')
+        # print('In Ze Loop')
 
         # As long as the camera is getting an input
         while(cap.isOpened()):
@@ -79,14 +78,14 @@ while(True):
             hsv_image = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 
             # Hardcoded Colour Ranges, each consists of a lower & upper pair
-            lower1 = np.array([16,54,10])     #yellow ball 23
+            lower1 = np.array([16,54,10])     # Yellow ball 23
             upper1 = np.array([89,122,250])
 
-            lower2 = np.array([84,208,10])      #blue ball 24
-            upper2 = np.array([121,255,250])
+            lower2 = np.array([95,89,202])      # Blue ball 24
+            upper2 = np.array([116,255,255])
 
-            lower3 = np.array([117,70,114])      #blue frisbee 25
-            upper3 = np.array([175,145,250])
+            lower3 = np.array([127,10,138])      # Pink ball 25
+            upper3 = np.array([156,255,255])
             
             # We then search for these colour ranges in the Image
             binary_image1 = cv2.inRange(hsv_image,lower1,upper1)
@@ -105,11 +104,11 @@ while(True):
             # We then select the largest colour found in the Image if it lies above a certain threshold
             # But the process may be susceptible to errors, so we setup a counter for the times it was 
             # detected and then we select a colour if it was detected at least 5 times 
-            if area1>area2 and area1>area3 and area1>5000:
+            if (area1>area2 and area1>area3 and area1>5000):
                 count_area1 += 1
-            elif area2>area1 and area2>area3 and area2>5000:
+            elif (area2>area1 and area2>area3 and area2>5000):
                 count_area2 += 1
-            elif area3>area1 and area3>area2 and area3>5000:
+            elif (area3>area1 and area3>area2 and area3>10000):
                 count_area3 += 1
             else:
                 pass
@@ -120,19 +119,19 @@ while(True):
                 count_area1,count_area2,count_area3 = 0,0,0
                 # We actuate the corresponding output PIN
                 GPIO.output(OUTPUT_PINS,(1,0,0))
-                print('Green detected')
+                print('Yellow detected')
             elif count_area2 == 5:
                 # We reset the counter
                 count_area1,count_area2,count_area3 = 0,0,0
                 # We actuate the corresponding output PIN
                 GPIO.output(OUTPUT_PINS,(0,1,0))
-                print('Yellow detected')
+                print('Blue detected')
             elif count_area3 == 5:                
                 # We reset the counter
                 count_area1,count_area2,count_area3 = 0,0,0                
                 # We actuate the corresponding output PIN
                 GPIO.output(OUTPUT_PINS,(0,0,1))
-                print('Blue detected')
+                print('Pink detected')
             else:
                 GPIO.output(OUTPUT_PINS,(0,0,0))
                 print('Waiting for ze color...')
